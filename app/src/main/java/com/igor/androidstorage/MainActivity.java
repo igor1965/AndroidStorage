@@ -1,5 +1,6 @@
 package com.igor.androidstorage;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -10,9 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
+                    
                     builder.show();
                    // Toast.makeText(getBaseContext(),"External storage is available",Toast.LENGTH_SHORT).show();
                 }else
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         {
             // add-write text into file
             try {
-                FileOutputStream fileout = openFileOutput(filename.getText().toString() +".txt", MODE_PRIVATE);
+                FileOutputStream fileout = openFileOutput("Test.txt", MODE_PRIVATE);
                 OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
                 outputWriter.write(message.getText().toString());
                 outputWriter.close();
@@ -102,9 +107,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void readInternalStorage(){
-        {
-            //reading text from file
-            try {
+                    //reading text from file
+            /*try {
                 FileInputStream fileIn = openFileInput(filename.getText().toString() +".txt");
                 InputStreamReader InputRead= new InputStreamReader(fileIn);
 
@@ -123,8 +127,28 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
+            }*/
+        //To read file from internal phone memory
+//get your application context:
+        String line;
+        Context context = getApplicationContext();
+
+       String filePath = context.getFilesDir().getAbsolutePath();
+        File file = new File(filePath, "Test.txt");
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
             }
         }
+        catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        message.setText(text);
     }
 
 }
